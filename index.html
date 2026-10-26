@@ -1,57 +1,144 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Свет Солнца - 82 Города</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Свет Солнца — наша планета добра</title>
+<meta name="description" content="Интерактивная планета проекта «Свет Солнца»: наши страны, города и благотворительные сообщества.">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0e14;color:#e8d5a3;font-family:system-ui;overflow:hidden}
-#globe{width:100vw;height:100vh;display:block}
-#panel{position:fixed;left:12px;top:12px;bottom:12px;width:320px;background:rgba(15,20,30,0.92);border:1px solid #3a2e1a;border-radius:16px;padding:16px;overflow:auto;backdrop-filter:blur(12px);z-index:10}
-h1{font-size:20px;color:#ffd76a;margin-bottom:4px}
-.sub{font-size:12px;opacity:0.7;margin-bottom:12px}
-input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #3a2e1a;background:#0f141e;color:#ffd76a;margin-bottom:12px}
-.country{border:1px solid #2a2215;border-radius:12px;padding:10px;margin-bottom:8px;cursor:pointer;background:rgba(255,215,106,0.04)}
-.country:hover{border-color:#ffd76a}
-.country-head{display:flex;justify-content:space-between;align-items:center;font-weight:700}
-.flag{font-size:18px}
-.count{font-size:12px;background:#ffd76a22;padding:2px 8px;border-radius:20px}
-.cities{margin-top:8px;max-height:0;overflow:hidden;transition:0.3s}
-.country.open .cities{max-height:600px}
-.city{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;opacity:0.85;cursor:pointer}
-.city:hover{color:#ffd76a;opacity:1}
-#hint{position:fixed;right:12px;top:12px;background:rgba(15,20,30,0.9);border:1px solid #3a2e1a;border-radius:12px;padding:10px 14px;font-size:12px;z-index:10}
-@media(max-width:700px){#panel{width:auto;right:12px;top:auto;bottom:12px;max-height:45vh}#hint{display:none}}
+:root{--gold:#ffd34e;--sky:#73d8ff;--ink:#071322;--panel:#0d2034;--muted:#afc4d8;--white:#f7fbff}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:radial-gradient(ellipse at 50% 30%,#102d49 0%,#071322 65%,#030914 100%);color:var(--white);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:22px clamp(18px,4vw,56px);border-bottom:1px solid #24415b}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.02em}.sun{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#ff9d32);color:#102033;font-size:25px;box-shadow:0 0 28px #ffc84a66}
+.tag{color:var(--sky);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+header a{color:var(--gold);text-decoration:none;font-size:14px}
+main{max-width:1440px;margin:auto;padding:28px clamp(16px,3vw,42px) 54px}
+.hero{text-align:center;margin:8px auto 18px;max-width:780px}.hero h1{font-size:clamp(30px,5vw,56px);line-height:1.04;margin:10px 0 14px;letter-spacing:-.035em}.hero h1 span{color:var(--gold)}.hero p{margin:0;color:var(--muted);font-size:clamp(15px,2vw,18px);line-height:1.65}
+.layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(290px,.8fr);gap:18px;align-items:stretch;margin-top:26px}
+.globe-card,.info-card{background:linear-gradient(145deg,#0b1c2dcc,#081523ee);border:1px solid #29445d;border-radius:24px;overflow:hidden;box-shadow:0 18px 60px #0004}
+.globe-top{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:17px 20px;border-bottom:1px solid #203b52}.globe-top strong{font-size:14px}.hint{color:var(--muted);font-size:12px}
+#globeViz{width:100%;height:min(65vw,650px);min-height:360px;cursor:grab}#globeViz:active{cursor:grabbing}
+.info-card{padding:22px;display:flex;flex-direction:column;min-height:440px}.eyebrow{color:var(--sky);text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800}.info-card h2{font-size:27px;margin:9px 0 8px}.intro{color:var(--muted);line-height:1.55;font-size:14px;margin:0 0 20px}.country-list{display:grid;gap:10px}.country-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;padding:14px 15px;background:#102940;border:1px solid #294a65;border-radius:14px;color:var(--white);cursor:pointer;font:inherit;transition:.2s}.country-btn:hover,.country-btn.active{border-color:var(--gold);background:#17364d}.country-btn small{display:block;color:var(--muted);margin-top:4px;font-size:12px}.arrow{color:var(--gold);font-size:20px}
+.city-area{margin-top:20px;padding-top:18px;border-top:1px solid #29445d}.city-area h3{font-size:18px;margin:0 0 6px}.city-area p{font-size:13px;color:var(--muted);margin:0 0 12px;line-height:1.5}.city-links{display:grid;gap:8px}.city-link{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;background:#091a2a;border:1px solid #203a51;color:var(--white);text-decoration:none;font-size:14px}.city-link:hover{border-color:var(--sky)}.city-link span:last-child{color:var(--sky);font-size:12px}.notice{margin-top:auto;padding-top:18px;color:#829cb4;font-size:11px;line-height:1.5}
+.bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}.feature{border:1px solid #29445d;background:#0a1a2a;border-radius:18px;padding:18px}.feature b{display:block;color:var(--gold);margin-bottom:7px}.feature p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+footer{max-width:1440px;margin:auto;padding:0 clamp(16px,3vw,42px) 30px;color:#829cb4;font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:900px){.layout{grid-template-columns:1fr}#globeViz{height:440px}.info-card{min-height:0}.notice{margin-top:22px}.bottom{grid-template-columns:1fr}}
+@media(max-width:500px){header{padding:16px}.brand{font-size:13px}.sun{width:38px;height:38px}.tag{display:none}#globeViz{height:350px;min-height:320px}.globe-top{align-items:flex-start;flex-direction:column}.hero h1{font-size:34px}}
 </style>
 </head>
 <body>
-<canvas id="globe"></canvas>
-<div id="panel">
-<h1>☀️ Свет Солнца</h1>
-<div class="sub">82 города • 4 страны • Крым — часть Украины</div>
-<input id="search" placeholder="Поиск города...">
-<div id="list"></div>
-</div>
-<div id="hint">Мышкой крути • Колесо — зум • Клик — город</div>
+<header>
+  <div class="brand"><div class="sun">☀</div><div>СВЕТ СОЛНЦА<div class="tag">Light of the Sun · доброта без границ</div></div></div>
+  <a href="#our-countries">Наши страны ↘</a>
+</header>
+<main>
+  <section class="hero">
+    <div class="eyebrow">Одна планета · много добрых дел</div>
+    <h1>Доброта не знает <span>границ</span></h1>
+    <p>Выбери страну на планете и найди наши городские сообщества. Мы объединяем людей, которые хотят помогать друг другу и животным.</p>
+  </section>
+  <section class="layout">
+    <div class="globe-card">
+      <div class="globe-top"><strong>🌍 Интерактивная карта «Света Солнца»</strong><span class="hint">Вращай планету · нажми на подсвеченную страну или точку города</span></div>
+      <div id="globeViz" aria-label="Интерактивный глобус"></div>
+    </div>
+    <aside class="info-card" id="our-countries">
+      <div class="eyebrow">Наши сообщества</div>
+      <h2 id="panelTitle">Выбери страну</h2>
+      <p class="intro" id="panelIntro">Нажми на Украину или Армению на планете либо выбери страну ниже. Здесь отображаются только страны и города проекта.</p>
+      <div class="country-list" id="countryList"></div>
+      <div class="city-area" id="cityArea" hidden>
+        <h3 id="cityHeading">Города проекта</h3>
+        <p id="cityIntro">Выбери город, чтобы открыть наше сообщество.</p>
+        <div class="city-links" id="cityLinks"></div>
+      </div>
+      <div class="notice">Это стартовая версия сайта. Перед публикацией проверьте адреса Facebook-групп и добавьте остальные города. Сбор пожертвований можно подключить отдельным безопасным этапом.</div>
+    </aside>
+  </section>
+  <section class="bottom">
+    <div class="feature"><b>☀️ Добро объединяет</b><p>Развиваем сообщества, в которых люди могут отдавать вещи бесплатно и поддерживать друг друга.</p></div>
+    <div class="feature"><b>🐾 Забота о животных</b><p>Отдельное направление проекта посвящено помощи животным и ответственному отношению к ним.</p></div>
+    <div class="feature"><b>🌍 Рост по странам</b><p>Добавляем новые страны и города по мере создания и проверки наших групп.</p></div>
+  </section>
+</main>
+<footer><span>© Свет Солнца · Light of the Sun</span><span>Стартовая версия · создана для развития проекта</span></footer>
+
+<script src="https://unpkg.com/globe.gl"></script>
+<script src="https://unpkg.com/topojson-client@3"></script>
 <script>
-const countries={UA:{label:'Украина',flag:'🇺🇦',lat:48.38,lng:31.17,cities:[['Киев','kyivsun',50.4501,30.5234],['Харьков','harkivsun',49.9935,36.2304],['Одесса','odesasun',46.4825,30.7233],['Днепр','dniprosun',48.4647,35.0462],['Львов','lvivsun',49.8397,24.0297],['Запорожье','zaporizhsun',47.8388,35.1396],['Кривой Рог','krrigsun',47.9105,33.3918],['Николаев','mykolaivsun',46.975,31.9946],['Винница','vinnytsiasun',49.2331,28.4682],['Донецк','donetsksun',48.0159,37.8028],['Полтава','poltavasun',49.5883,34.5514],['Чернигов','chernigivsun',51.4982,31.2893],['Черкассы','cherkasysun',49.4444,32.0598],['Хмельницкий','hmelnytskiysun',49.4229,26.9871],['Луганск','luhansksun',48.574,39.3078],['Житомир','zhytomyrsun',50.2547,28.6587],['Сумы','symysun',50.9077,34.7981],['Черновцы','chernivtsisun',48.2917,25.9353],['Ровно','rivnosun',50.6199,26.2516],['Херсон','khersonsun',46.6354,32.6169],['Тернополь','ternopilsun',49.5535,25.5948],['Ивано-Франковск','ifrankivsksun',49.4448,24.7111],['Луцк','lytsksun',50.7472,25.3254],['Ужгород','yzhgorodsun',48.6208,22.2878],['Кропивницкий','kropysun',48.5079,32.2623],['Симферополь','simferopolsun',44.9521,34.1024],['Севастополь','sevastopolsun',44.6167,33.5254]]},AM:{label:'Армения',flag:'🇦🇲',lat:40.1792,lng:44.4991,cities:[['Ереван','yerevansun',40.1792,44.4991],['Гюмри','giumrisun',40.7894,43.8475],['Ванадзор','vanadzorsun',40.8128,44.4883],['Абовян','abovian',40.269,44.6266],['Раздан','razdansun',40.4975,44.7662],['Вагаршапат','vagarshapat',40.1614,44.291],['Капан','kapansun',39.2075,46.4058],['Армавир','armavirsun',40.1545,44.0382],['Чаренцаван','charencavansun',40.4042,44.6443],['Масис','masissun',40.0656,44.4358],['Арташат','artashatsun',39.9611,44.5506],['Севан','sevansun',40.5473,44.9417],['Иджеван','idzhevansun',40.8788,45.1485],['Гавар','gavarsun',40.365,45.1266],['Артик','artiksun',40.615,43.9675],['Горис','gorissun',39.505,46.332],['Дилижан','dilizhansun',40.74,44.863],['Аштарак','ashtarak',40.3,44.361],['Арарат','araratsun',39.845,44.704],['Спитак','spitaksun',40.835,44.266]]},MD:{label:'Молдова',flag:'🇲🇩',lat:47.0105,lng:28.8638,cities:[['Кишинёв','chisinausun',47.0105,28.8638],['Бельцы','beltsisun',47.7533,27.9186],['Кагул','cahulsun',45.9047,28.1995],['Оргеев','orheisun',47.3828,28.8242],['Унгены','unghenysun',47.2093,27.8007],['Сороки','sorokasun',48.1569,28.2849],['Комрат','komratsun',46.3001,28.6573],['Чадыр-Лунга','ceadirsun',46.0574,28.8266],['Единцы','edinetsun',48.1674,27.306],['Хынчешты','hincestissun',46.8283,28.5879],['Страшены','strasenisun',47.1399,28.6133],['Дрокия','drochiasun',48.0362,27.8198],['Тирасполь','tiraspol',46.8482,29.5968],['Бендеры','benderysun',46.8222,29.4782],['Рыбница','rybnitsasun',47.7681,29.0021],['Дубоссары','dybosarysun',47.264,29.155],['Слободзея','slobodzeiasun',46.73,29.703]]},PL:{label:'Польша',flag:'🇵🇱',lat:52.2297,lng:21.0122,cities:[['Варшава','warszawsun',52.2297,21.0122],['Краков','krakowsun',50.0647,19.945],['Лодзь','lodzsun',51.7592,19.456],['Вроцлав','wroclawsun',51.1079,17.0385],['Познань','poznansun',52.4064,16.9252],['Гданьск','gdansksun',54.352,18.6466],['Щецин','szczecinsun',53.4285,14.5528],['Быдгощ','bydgoszczsun',53.1235,18.0084],['Торунь','torunsun',53.0138,18.5984],['Люблин','lublinsun',51.2465,22.5684],['Белосток','bialystoksun',53.1325,23.1688],['Жешув','rzeszowsun',50.0412,21.9991],['Катовице','katowicesun',50.2649,19.0238],['Кельце','kielcesun',50.8661,20.6286],['Ольштын','olsztynsun',53.7702,20.4902],['Ополе','opolesun',50.6751,17.9213],['Гожув','gorzowsun',52.7368,15.2288],['Зелёна-Гура','zielonasun',51.9356,15.5062]]}};
-const allCities=[];Object.entries(countries).forEach(([k,c])=>c.cities.forEach(city=>allCities.push({country:k,countryLabel:c.label,flag:c.flag,name:city[0],slug:city[1],lat:city[2],lng:city[3]})));
-const canvas=document.getElementById('globe');const ctx=canvas.getContext('2d');let W,H,rotX=-20,rotY=35,scale=280,auto=true,hover=null,drag=false,lx,ly;
-function resize(){W=canvas.width=innerWidth*devicePixelRatio;H=canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
-addEventListener('resize',resize);resize();
-function project(lat,lng){const phi=(90-lat)*Math.PI/180,theta=(lng+rotY)*Math.PI/180;const sinPhi=Math.sin(phi);const x=sinPhi*Math.cos(theta),y=Math.cos(phi)*Math.cos(rotX*Math.PI/180)-sinPhi*Math.sin(theta)*Math.sin(rotX*Math.PI/180),z=Math.sin(phi)*Math.sin(theta)*Math.cos(rotX*Math.PI/180)+Math.cos(phi)*Math.sin(rotX*Math.PI/180);if(z<-0.1)return null;const cx=innerWidth/2+x*scale,cy=innerHeight/2+y*scale;return {x:cx,y:cy,z}}
-function draw(){ctx.clearRect(0,0,innerWidth,innerHeight);ctx.fillStyle='#0a0e14';ctx.fillRect(0,0,innerWidth,innerHeight);for(let i=0;i<200;i++){ctx.fillStyle=`rgba(255,255,255,${Math.random()*0.5})`;ctx.fillRect(Math.random()*innerWidth,Math.random()*innerHeight,1,1)}ctx.beginPath();ctx.arc(innerWidth/2,innerHeight/2,scale,0,Math.PI*2);ctx.fillStyle='#111a27';ctx.fill();ctx.strokeStyle='#2a2215';ctx.stroke();ctx.strokeStyle='rgba(255,215,106,0.08)';ctx.lineWidth=0.5;for(let lat=-60;lat<=60;lat+=30){ctx.beginPath();let first=true;for(let lng=-180;lng<=180;lng+=2){const p=project(lat,lng);if(!p)continue;if(first){ctx.moveTo(p.x,p.y);first=false}else ctx.lineTo(p.x,p.y)}ctx.stroke()}for(let lng=-150;lng<=150;lng+=30){ctx.beginPath();let first=true;for(let lat=-70;lat<=70;lat+=2){const p=project(lat,lng);if(!p)continue;if(first){ctx.moveTo(p.x,p.y);first=false}else ctx.lineTo(p.x,p.y)}ctx.stroke()}ctx.fillStyle='#ffd76a';ctx.beginPath();ctx.arc(innerWidth/2,innerHeight/2,scale+2,0,Math.PI*2);ctx.strokeStyle='rgba(255,215,106,0.3)';ctx.lineWidth=1.5;ctx.stroke();allCities.forEach(c=>{const p=project(c.lat,c.lng);if(!p)return;const isHover=hover===c;const r=isHover?6:3.5;ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fillStyle=c.country==='UA' && (c.name==='Симферополь'||c.name==='Севастополь') ? '#ffec9e' : '#ffd76a';if(isHover)ctx.fillStyle='#ffffff';ctx.fill();ctx.shadowColor='#ffd76a';ctx.shadowBlur=isHover?12:6;ctx.fill();ctx.shadowBlur=0;if(scale>300 || isHover){ctx.fillStyle='rgba(232,213,163,0.9)';ctx.font=`${isHover?13:11}px system-ui`;ctx.fillText(c.name,p.x+8,p.y-4);}});if(auto)rotY+=0.15;requestAnimationFrame(draw);}
-draw();
-canvas.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY;auto=false});
-addEventListener('mouseup',()=>drag=false);
-addEventListener('mousemove',e=>{if(drag){rotY+=(e.clientX-lx)*0.3;rotX+=(e.clientY-ly)*0.3;rotX=Math.max(-80,Math.min(80,rotX));lx=e.clientX;ly=e.clientY}const mx=e.clientX,my=e.clientY;hover=null;for(const c of allCities){const p=project(c.lat,c.lng);if(!p)continue;if(Math.hypot(p.x-mx,p.y-my)<10){hover=c;canvas.style.cursor='pointer';break}}if(!hover)canvas.style.cursor='grab';});
-canvas.addEventListener('wheel',e=>{e.preventDefault();scale=Math.max(150,Math.min(700,scale+e.deltaY*-0.3))},{passive:false});
-canvas.addEventListener('click',()=>{if(hover){alert(hover.flag+' '+hover.name+' — '+hover.countryLabel+'\nГруппа: fb.com/groups/'+hover.slug);}});
-const list=document.getElementById('list');const search=document.getElementById('search');
-function render(filter=''){list.innerHTML='';Object.entries(countries).forEach(([k,c])=>{const filtered=c.cities.filter(city=>city[0].toLowerCase().includes(filter.toLowerCase()));if(filter && filtered.length===0)return;const div=document.createElement('div');div.className='country';div.innerHTML=`<div class="country-head"><span>${c.flag} ${c.label}</span><span class="count">${c.cities.length}</span></div><div class="cities">${filtered.map(city=>`<div class="city" data-lat="${city[2]}" data-lng="${city[3]}"><span>${city[0]}</span><span style="opacity:0.5">↗</span></div>`).join('')}</div>`;div.querySelector('.country-head').onclick=()=>{div.classList.toggle('open');rotY=-c.lng;rotX=c.lat>45?-c.lat+50:-20;scale=340;auto=false};div.querySelectorAll('.city').forEach((el,i)=>{el.onclick=()=>{const city=filtered[i];rotY=-city[3];rotX=-city[2]+45;scale=500;auto=false;setTimeout(()=>alert(c.flag+' '+city[0]),300)};});list.appendChild(div);});}
-render();
-search.oninput=e=>render(e.target.value);
+const countries = {
+  Ukraine: { label: "Украина", flag: "🇺🇦", coords: {lat:48.38,lng:31.17}, cities: [
+    ["Київ","https://www.facebook.com/groups/kyivsun/",50.4501,30.5234],["Харків","https://www.facebook.com/groups/harkivsun/",49.9935,36.2304],["Одеса","https://www.facebook.com/groups/odesasun/",46.4825,30.7233],["Дніпро","https://www.facebook.com/groups/dniprosun/",48.4647,35.0462],["Львів","https://www.facebook.com/groups/lvivsun/",49.8397,24.0297],["Запоріжжя","https://www.facebook.com/groups/zaporizsun/",47.8388,35.1396],["Кривий Ріг","https://www.facebook.com/groups/krrigsun/",47.9105,33.3918],["Миколаїв","https://www.facebook.com/groups/mykolaivsun/",46.975,31.9946],["Вінниця","https://www.facebook.com/groups/vinnytsiasun/",49.2331,28.4682],["Донецьк","https://www.facebook.com/groups/donetsksun/",48.0159,37.8028],["Полтава","https://www.facebook.com/groups/poltavasun/",49.5883,34.5514],["Чернігів","https://www.facebook.com/groups/chernigivsun/",51.4982,31.2893],["Черкаси","https://www.facebook.com/groups/cherkasysun/",49.4444,32.0598],["Хмельницький","https://www.facebook.com/groups/hmelnytskiysun/",49.4229,26.9871],["Луганськ","https://www.facebook.com/groups/lygansksun/",48.574,39.3078],["Житомир","https://www.facebook.com/groups/zhytomyrsun/",50.2547,28.6587],["Суми","https://www.facebook.com/groups/symysun/",50.9077,34.7981],["Чернівці","https://www.facebook.com/groups/chernivtsisun/",48.2915,25.9403],["Рівне","https://www.facebook.com/groups/rivnesun/",50.6199,26.2516],["Херсон","https://www.facebook.com/groups/khersonsun",46.6354,32.6169],["Тернопіль","https://www.facebook.com/groups/ternopilsun/",49.5535,25.5948],["Івано-Франківськ","https://www.facebook.com/groups/931625462904907/",48.9226,24.7111],["Луцьк","https://www.facebook.com/groups/lytsksun/",50.7472,25.3254],["Ужгород","https://www.facebook.com/groups/yzhgorod/",48.6208,22.2879],["Кропивницький","https://www.facebook.com/groups/kropyvnitskiy/",48.5079,32.2623],["Сімферополь","https://www.facebook.com/groups/simferopolsun/",44.9521,34.1024],["Севастополь","https://www.facebook.com/groups/sevastopolsun/",44.6167,33.5254]
+  ]},
+  Poland: { label: "Polska · Польша", flag: "🇵🇱", coords: {lat:52.1,lng:19.4}, cities: [
+    ["Warszawa","https://www.facebook.com/groups/warszawasun/",52.2297,21.0122],["Kraków","https://www.facebook.com/groups/krakowsun",50.0647,19.945],["Łódź","https://www.facebook.com/groups/lodzsun/",51.7592,19.456],["Wrocław","https://www.facebook.com/groups/wroclawsun",51.1079,17.0385],["Poznań","https://www.facebook.com/groups/poznansun",52.4064,16.9252],["Gdańsk","https://www.facebook.com/groups/gdansksun/",54.352,18.6466],["Szczecin","https://www.facebook.com/groups/szczecinsun/",53.4285,14.5528],["Bydgoszcz","https://www.facebook.com/groups/bydgoszczsun/",53.1235,18.0084],["Toruń","https://www.facebook.com/groups/torunsun",53.0138,18.5984],["Lublin","https://www.facebook.com/groups/lublinsun/",51.2465,22.5684],["Białystok","https://www.facebook.com/groups/bialystoksun/",53.1325,23.1688],["Rzeszów","https://www.facebook.com/groups/rzeszowsun/",50.0412,21.9991],["Katowice","https://www.facebook.com/groups/katowicesun/",50.2649,19.0238],["Kielce","https://www.facebook.com/groups/kielcesun/",50.8661,20.6286],["Olsztyn","https://www.facebook.com/groups/olsztynsun/",53.7784,20.4801],["Opole","https://www.facebook.com/groups/opolesun/",50.6751,17.9213],["Gorzów Wielkopolski","https://www.facebook.com/groups/gorzowsun/",52.7368,15.2288],["Zielona Góra","https://www.facebook.com/groups/zielonagorasun/",51.9356,15.5062]
+  ]},
+  Moldova: { label: "Молдова", flag: "🇲🇩", coords: {lat:47.01,lng:28.86}, cities: [
+    ["Кишинёв (Chișinău)","https://www.facebook.com/groups/chisinausun/",47.0105,28.8638],["Бельцы (Bălți)","https://www.facebook.com/groups/beltsisun/",47.7631,27.9293],["Кагул (Cahul)","https://www.facebook.com/groups/cahulsun/",45.9043,28.1993],["Оргеев (Orhei)","https://www.facebook.com/groups/orheisun/",47.3849,28.8231],["Унгены (Ungheni)","https://www.facebook.com/groups/unghenisun/",47.2108,27.8005],["Сороки (Soroca)","https://www.facebook.com/groups/sorocasun/",48.1566,28.2849],["Комрат (Comrat)","https://www.facebook.com/groups/comratsun/",46.2946,28.6565],["Чадыр-Лунга (Ceadîr-Lunga)","https://www.facebook.com/groups/ceadirsun/",46.0617,28.8308],["Единцы (Edineț)","https://www.facebook.com/groups/edinetsun/",48.1721,27.3034],["Хынчешты (Hîncești)","https://www.facebook.com/groups/hincestisun/",46.8305,28.5906],["Страшены (Strășeni)","https://www.facebook.com/groups/strasenisun/",47.1422,28.6077],["Дрокия (Drochia)","https://www.facebook.com/groups/drochia/",48.0356,27.8129],["Тирасполь","https://www.facebook.com/groups/tiraspolsun/",46.8403,29.6433],["Бендеры (Тигина)","https://www.facebook.com/groups/benderysun/",46.8316,29.4777],["Рыбница","https://www.facebook.com/groups/rybnitsasun/",47.7682,29.0011],["Дубоссары","https://www.facebook.com/groups/dybosarysun/",47.2656,29.1608],["Слободзея","https://www.facebook.com/groups/slobodzeiasun/",46.7293,29.7045]
+  ]},
+  Armenia: { label: "Հայաստան · Армения", flag: "🇦🇲", coords: {lat:40.18,lng:44.5}, cities: [
+    ["Ереван — Երևան","https://www.facebook.com/groups/yerevansun",40.1792,44.4991],["Гюмри — Գյումրի","https://www.facebook.com/groups/giumrisun/",40.7894,43.8475],["Ванадзор — Վանաձոր","https://www.facebook.com/groups/vanadzorsun/",40.8128,44.4883],["Абовян — Աբովյան","https://www.facebook.com/groups/abovian/",40.269,44.6266],["Раздан — Հրազդան","https://www.facebook.com/groups/razdansun/",40.4975,44.7662],["Вагаршапат / Эчмиадзин — Վաղարշապատ / Էջմիածին","https://www.facebook.com/groups/vagarshapat/",40.1614,44.291],["Капан — Կապան","https://www.facebook.com/groups/kapansun/",39.2075,46.4058],["Армавир — Արմավիր","https://www.facebook.com/groups/armavirsun/",40.1545,44.0382],["Чаренцаван — Չարենցավան","https://www.facebook.com/groups/charencavansun/",40.4042,44.6443],["Масис — Մասիս","https://www.facebook.com/groups/masissun/",40.0656,44.4358],["Арташат — Արտաշատ","https://www.facebook.com/groups/artashatsun/",39.9611,44.5506],["Севан — Սևան","https://www.facebook.com/groups/sevansun/",40.5473,44.9417],["Иджеван — Իջևան","https://www.facebook.com/groups/idzhevan/",40.8788,45.1485],["Гавар — Գավառ","https://www.facebook.com/groups/gavarsun/",40.3539,45.1267],["Артик — Արթիկ","https://www.facebook.com/groups/artiksun/",40.6213,43.9674],["Горис — Գորիս","https://www.facebook.com/groups/gorissun/",39.5111,46.3417],["Дилижан — Դիլիջան","https://www.facebook.com/groups/dilizhansun/",40.7407,44.8635],["Аштарак — Աշտարակ","https://www.facebook.com/groups/ashtarak/",40.2991,44.362],["Арарат — Արարատ","https://www.facebook.com/groups/araratsun/",39.8307,44.705],["Спитак — Սպիտակ","https://www.facebook.com/groups/spitak/",40.8322,44.2673]
+  ]}
+};
+
+const allCities = Object.entries(countries).flatMap(([countryKey,c])=>c.cities.map(city=>({countryKey,country:c.label,flag:c.flag,name:city[0],url:city[1],lat:city[2],lng:city[3]})));
+const panelTitle=document.getElementById('panelTitle'), panelIntro=document.getElementById('panelIntro'), cityArea=document.getElementById('cityArea'), cityHeading=document.getElementById('cityHeading'), cityLinks=document.getElementById('cityLinks'), cityIntro=document.getElementById('cityIntro'), countryList=document.getElementById('countryList');
+let selectedCountry=null;
+function renderCountryButtons(){
+  countryList.innerHTML='';
+  Object.entries(countries).forEach(([key,c])=>{
+    const b=document.createElement('button'); b.className='country-btn'+(selectedCountry===key?' active':'');
+    b.innerHTML=`<span>${c.flag} ${c.label}<small>${c.cities.length} городских сообществ в списке</small></span><span class="arrow">›</span>`;
+    b.addEventListener('click',()=>selectCountry(key,true)); countryList.appendChild(b);
+  });
+}
+function selectCountry(key,focusGlobe=false){
+  const c=countries[key]; if(!c)return; selectedCountry=key;
+  panelTitle.textContent=c.flag+' '+c.label;
+  panelIntro.textContent='Городские сообщества проекта «Свет Солнца» в этой стране.';
+  cityArea.hidden=false; cityHeading.textContent='Города проекта · '+c.cities.length;
+  cityIntro.textContent='Нажми на город, чтобы открыть соответствующую Facebook-группу.';
+  cityLinks.innerHTML='';
+  c.cities.forEach(city=>{
+    const a=document.createElement('a'); a.className='city-link'; a.href=city[1]; a.target='_blank'; a.rel='noopener noreferrer';
+    a.innerHTML='<span>'+city[0]+'</span><span>Открыть группу ↗</span>'; cityLinks.appendChild(a);
+  });
+  renderCountryButtons();
+  if(focusGlobe && globe){globe.pointOfView({lat:c.coords.lat,lng:c.coords.lng,altitude:1.7},900);}
+}
+renderCountryButtons();
+
+const globe=Globe()(document.getElementById('globeViz'))
+  .backgroundColor('rgba(0,0,0,0)')
+  .showAtmosphere(true).atmosphereColor('#72d8ff').atmosphereAltitude(0.18)
+  .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
+  .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+  .pointsData(allCities)
+  .pointLat(d=>d.lat).pointLng(d=>d.lng)
+  .pointAltitude(0.025).pointRadius(d=>d.countryKey===selectedCountry?0.42:0.28)
+  .pointColor(d=>d.countryKey==='Ukraine'?'#ffd34e':'#72d8ff')
+  .pointLabel(d=>`${d.flag} ${d.name} · ${d.country}`)
+  .onPointClick(d=>selectCountry(d.countryKey,true))
+  .onPointHover(d=>{document.getElementById('globeViz').style.cursor=d?'pointer':'grab';})
+  .polygonsData([])
+  .polygonCapColor(d=>d.properties?.name==='Ukraine'?'#ffd34e88':d.properties?.name==='Armenia'?'#72d8ff88':'rgba(40,90,120,.08)')
+  .polygonSideColor(()=> 'rgba(40,90,120,.12)')
+  .polygonStrokeColor(()=> '#79dfff')
+  .polygonAltitude(d=>['Ukraine','Armenia'].includes(d.properties?.name)?0.035:0.004)
+  .onPolygonClick(d=>{
+    const name=d?.properties?.name;
+    if(name==='Ukraine')selectCountry('Ukraine',true);
+    if(name==='Armenia')selectCountry('Armenia',true);
+  });
+globe.controls().autoRotate=true; globe.controls().autoRotateSpeed=0.38; globe.controls().enableDamping=true;
+fetch('https://unpkg.com/world-atlas@2/countries-110m.json').then(r=>r.json()).then(world=>{
+  const features=topojson.feature(world,world.objects.countries).features;
+  // Границы будут подключены отдельно; маркеры городов и списки стран уже работают.
+  globe.polygonsData([]);
+}).catch(()=>{});
+globe.pointOfView({lat:35,lng:35,altitude:2.25},0);
+window.addEventListener('resize',()=>globe.width(document.getElementById('globeViz').clientWidth));
 </script>
 </body>
 </html>
