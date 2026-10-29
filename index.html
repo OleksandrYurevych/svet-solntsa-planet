@@ -7,6 +7,9 @@
 <meta name="theme-color" content="#07152f">
 <meta name="description" content="Light of the Sun — a global community built on kindness, friendship and helping one another.">
 <title>Light of the Sun — Planet of Kindness</title>
+
+<script src="https://unpkg.com/globe.gl"></script>
+
 <style>
 :root {
   --night:#061329;
@@ -18,7 +21,8 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;color:#fff;
+  margin:0;
+  color:#fff;
   font-family:Arial,Helvetica,sans-serif;
   background:radial-gradient(ellipse at 50% 0%,#173e70 0%,var(--night) 60%,#020814 100%);
   min-height:100vh;
@@ -28,85 +32,135 @@ header{text-align:center;padding:35px 18px 15px}
 .sun-mark{
   width:76px;height:76px;margin:0 auto 14px;border-radius:50%;
   display:grid;place-items:center;font-size:38px;
-  color:#5b3500;background:radial-gradient(circle,#fffbd5 0%,#ffd76a 48%,#f69b25 75%,transparent 76%);
+  color:#5b3500;
+  background:radial-gradient(circle,#fffbd5 0%,#ffd76a 48%,#f69b25 75%,transparent 76%);
   filter:drop-shadow(0 0 22px #ffc44f);
 }
-h1{margin:0;color:var(--gold);font-size:clamp(30px,5vw,52px);letter-spacing:2px}
-.tagline{color:var(--light);font-size:16px;line-height:1.6;margin:12px auto;max-width:700px}
-.intro{color:var(--muted);font-size:14px;line-height:1.7}
+h1{
+  margin:0;color:var(--gold);
+  font-size:clamp(30px,5vw,52px);
+  letter-spacing:2px;
+}
+.tagline{
+  color:var(--light);font-size:16px;
+  line-height:1.6;margin:12px auto;max-width:700px;
+}
+.intro{
+  color:var(--muted);font-size:14px;
+  line-height:1.7;
+}
 main{width:min(1100px,94%);margin:auto}
-.planet-wrap{display:grid;place-items:center;padding:15px 0 25px}
-.planet{
-  position:relative;width:min(68vw,340px);aspect-ratio:1;border-radius:50%;
-  background:
-    radial-gradient(ellipse at 28% 25%,#70d8ff 0%,transparent 27%),
-    radial-gradient(ellipse at 65% 65%,#4eacb0 0%,transparent 20%),
-    radial-gradient(ellipse at 38% 62%,#70a95b 0%,transparent 25%),
-    radial-gradient(circle at 35% 30%,#318fc2,#14518d 48%,#071a42 75%);
-  box-shadow:inset -25px -18px 45px #020b22,
-    inset 12px 8px 28px #9de8ff88,0 0 35px #2caeff55,0 0 80px #ffd76a22;
-  animation:float 7s ease-in-out infinite;
+
+.planet-wrap{
+  display:grid;
+  place-items:center;
+  padding:15px 0 25px;
 }
-.planet:before{
-  content:"";position:absolute;inset:-10px;border-radius:50%;
-  border:1px solid #80cfff77;box-shadow:0 0 24px #3daeff22;
+#globe-container{
+  width:min(90vw,650px);
+  height:min(90vw,650px);
+  min-height:320px;
+  position:relative;
 }
-.planet:after{
-  content:"";position:absolute;inset:8% 3%;border-radius:50%;
-  border-left:2px solid #a8eaff55;border-right:2px solid #a8eaff22;
-  transform:rotate(-22deg);
+.globe-hint{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin:-8px 0 25px;
+  line-height:1.6;
 }
-.planet-label{
-  position:absolute;inset:0;display:grid;place-content:center;text-align:center;
-  text-shadow:0 2px 12px #00142b;font-weight:bold;z-index:1;
+.section-title{
+  text-align:center;color:var(--gold);
+  font-size:25px;margin:12px 0;
 }
-.planet-label strong{font-size:clamp(20px,4vw,29px);color:#fff3bf}
-.planet-label span{font-size:12px;letter-spacing:3px;margin-top:7px}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-.section-title{text-align:center;color:var(--gold);font-size:25px;margin:12px 0}
-.section-subtitle{text-align:center;color:var(--muted);font-size:14px;line-height:1.6}
+.section-subtitle{
+  text-align:center;color:var(--muted);
+  font-size:14px;line-height:1.6;
+}
 .search-area{max-width:620px;margin:20px auto}
 #countrySearch{
-  display:block;width:100%;padding:15px 17px;border-radius:12px;
-  border:1px solid #6685b6;background:#0b1c37;color:white;font-size:16px;
+  display:block;width:100%;padding:15px 17px;
+  border-radius:12px;border:1px solid #6685b6;
+  background:#0b1c37;color:white;font-size:16px;
   outline:none;
 }
-#countrySearch:focus{border-color:var(--gold);box-shadow:0 0 0 3px #ffd76a22}
-.count{text-align:center;color:var(--muted);font-size:13px;margin:12px}
-.country-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:20px 0 45px}
+#countrySearch:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px #ffd76a22;
+}
+.count{
+  text-align:center;color:var(--muted);
+  font-size:13px;margin:12px;
+}
+.country-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;margin:20px 0 45px;
+}
 .country-card{
   display:flex;align-items:center;gap:12px;padding:15px;
   background:linear-gradient(135deg,#16345a,#0b1a32);
-  border:1px solid #35547a;border-radius:12px;text-decoration:none;
+  border:1px solid #35547a;border-radius:12px;
+  text-decoration:none;
   transition:transform .18s,border-color .18s,background .18s;
 }
-.country-card:hover{transform:translateY(-3px);border-color:var(--gold);background:#193b64}
-.pin{flex:0 0 11px;width:11px;height:11px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px #ffd76a}
+.country-card:hover{
+  transform:translateY(-3px);
+  border-color:var(--gold);background:#193b64;
+}
+.pin{
+  flex:0 0 11px;width:11px;height:11px;
+  border-radius:50%;background:var(--gold);
+  box-shadow:0 0 12px #ffd76a;
+}
 .country-name{font-weight:bold;font-size:15px}
 .card-note{font-size:11px;color:var(--muted);margin-top:5px}
-.no-results{text-align:center;color:var(--muted);padding:20px;display:none}
-.info-section{border-top:1px solid #355078;padding:35px 0 25px}
-.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin:24px 0}
+.no-results{
+  text-align:center;color:var(--muted);
+  padding:20px;display:none;
+}
+.info-section{
+  border-top:1px solid #355078;
+  padding:35px 0 25px;
+}
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;margin:24px 0;
+}
 .info-card{
-  display:block;text-align:center;text-decoration:none;padding:25px 18px;
-  border-radius:15px;border:1px solid #45648b;
+  display:block;text-align:center;text-decoration:none;
+  padding:25px 18px;border-radius:15px;
+  border:1px solid #45648b;
   background:linear-gradient(145deg,#17365b,#09182e);
   transition:transform .2s,border-color .2s;
 }
-.info-card:hover{transform:translateY(-4px);border-color:var(--gold)}
+.info-card:hover{
+  transform:translateY(-4px);border-color:var(--gold);
+}
 .info-icon{font-size:32px;margin-bottom:12px}
 .info-card h3{color:var(--gold);font-size:17px;margin:8px 0}
-.info-card p{color:var(--muted);font-size:13px;line-height:1.6;margin:8px 0 15px}
-.visit{color:#fff0b4;font-size:12px;font-weight:bold;letter-spacing:.5px}
-footer{text-align:center;padding:22px 15px 30px;color:#91a9cb;font-size:12px;line-height:1.8}
+.info-card p{
+  color:var(--muted);font-size:13px;
+  line-height:1.6;margin:8px 0 15px;
+}
+.visit{
+  color:#fff0b4;font-size:12px;
+  font-weight:bold;letter-spacing:.5px;
+}
+footer{
+  text-align:center;padding:22px 15px 30px;
+  color:#91a9cb;font-size:12px;line-height:1.8;
+}
 footer strong{color:var(--gold)}
 @media(max-width:500px){
- header{padding-top:25px}
- .country-grid{grid-template-columns:1fr}
- .planet{width:min(75vw,300px)}
+  header{padding-top:25px}
+  .country-grid{grid-template-columns:1fr}
+  #globe-container{width:94vw;height:94vw;min-height:290px}
 }
 </style>
 </head>
+
 <body>
 <header>
   <div class="sun-mark" aria-hidden="true">☀</div>
@@ -116,43 +170,58 @@ footer strong{color:var(--gold)}
 </header>
 
 <main>
-  <section class="planet-wrap" aria-label="Our shared planet">
-    <div class="planet">
-      <div class="planet-label">
-        <strong>Our Shared World</strong>
-        <span>PEACE · KINDNESS · UNITY</span>
-      </div>
-    </div>
+  <section class="planet-wrap" aria-label="Interactive Earth">
+    <div id="globe-container"></div>
   </section>
+  <p class="globe-hint">
+    Drag to rotate the Earth · Scroll to zoom · Click a golden marker to visit a country community
+  </p>
 
   <section id="countries">
     <h2 class="section-title">Explore Our Countries</h2>
-    <p class="section-subtitle">Choose a country to visit its Light of the Sun community on Facebook.</p>
+    <p class="section-subtitle">
+      Choose a country to visit its Light of the Sun community on Facebook.
+    </p>
     <div class="search-area">
-      <input id="countrySearch" type="search" placeholder="Search for a country..." aria-label="Search countries">
+      <input id="countrySearch" type="search"
+        placeholder="Search for a country..."
+        aria-label="Search countries">
       <p class="count" id="countryCount" aria-live="polite"></p>
     </div>
     <div class="country-grid" id="countryGrid"></div>
-    <p class="no-results" id="noResults">No countries found. Try another search.</p>
+    <p class="no-results" id="noResults">
+      No countries found. Try another search.
+    </p>
   </section>
 
   <section class="info-section" id="our-community">
     <h2 class="section-title">Discover More of Our Community</h2>
-    <p class="section-subtitle">Join us in making the world a kinder place for people and animals.</p>
+    <p class="section-subtitle">
+      Join us in making the world a kinder place for people and animals.
+    </p>
+
     <div class="info-grid">
-      <a class="info-card" href="https://www.facebook.com/groups/charityforanimals/" target="_blank" rel="noopener noreferrer">
+      <a class="info-card"
+        href="https://www.facebook.com/groups/charityforanimals/"
+        target="_blank" rel="noopener noreferrer">
         <div class="info-icon" aria-hidden="true">🐾</div>
         <h3>Charity for Animals</h3>
         <p>Help animals, share kindness and support a community that cares for every living creature.</p>
         <span class="visit">VISIT FACEBOOK GROUP ↗</span>
       </a>
-      <a class="info-card" href="https://www.facebook.com/groups/extremesun/" target="_blank" rel="noopener noreferrer">
+
+      <a class="info-card"
+        href="https://www.facebook.com/groups/extremesun/"
+        target="_blank" rel="noopener noreferrer">
         <div class="info-icon" aria-hidden="true">🏔️</div>
         <h3>Extreme Sports</h3>
         <p>Connect with adventure lovers, discover exciting activities and celebrate an active spirit.</p>
         <span class="visit">VISIT FACEBOOK GROUP ↗</span>
       </a>
-      <a class="info-card" href="https://svetotsolnca.tilda.ws/charity" target="_blank" rel="noopener noreferrer">
+
+      <a class="info-card"
+        href="https://svetotsolnca.tilda.ws/charity"
+        target="_blank" rel="noopener noreferrer">
         <div class="info-icon" aria-hidden="true">☀️</div>
         <h3>Light of the Sun — Official Website</h3>
         <p>Discover our main project and learn more about our mission of kindness and mutual support.</p>
@@ -222,6 +291,59 @@ const countries = [
   ["Dominican Republic","https://www.facebook.com/groups/sundominicanrepublic/"]
 ];
 
+const countryLocations = {
+  "Afghanistan":[33.9,67.7],
+  "Albania":[41.2,20.2],
+  "Algeria":[28,1.7],
+  "Andorra":[42.5,1.5],
+  "Angola":[-11.2,17.9],
+  "Antigua and Barbuda":[17.1,-61.8],
+  "Argentina":[-38.4,-63.6],
+  "Armenia":[40.1,45],
+  "Australia":[-25.3,133.8],
+  "Austria":[47.5,14.6],
+  "Azerbaijan":[40.1,47.6],
+  "Bahamas":[25,-77.4],
+  "Bahrain":[26,50.6],
+  "Bangladesh":[23.7,90.4],
+  "Barbados":[13.2,-59.5],
+  "Belarus":[53.7,27.9],
+  "Belgium":[50.5,4.5],
+  "Belize":[17.2,-88.5],
+  "Benin":[9.3,2.3],
+  "Bhutan":[27.5,90.4],
+  "Bolivia":[-16.3,-63.6],
+  "Bosnia and Herzegovina":[43.9,17.7],
+  "Botswana":[-22.3,24.7],
+  "Brazil":[-10.8,-52.9],
+  "Brunei":[4.5,114.7],
+  "Bulgaria":[42.7,25.5],
+  "Burkina Faso":[12.2,-1.6],
+  "Burundi":[-3.4,29.9],
+  "Cabo Verde":[15.1,-23.6],
+  "Cambodia":[12.6,104.9],
+  "Cameroon":[5.9,12.4],
+  "Canada":[56.1,-106.3],
+  "Central African Republic":[6.6,20.9],
+  "Chad":[15.5,18.7],
+  "Chile":[-35.7,-71.5],
+  "China":[35.9,104.2],
+  "Colombia":[4.6,-74.1],
+  "Comoros":[-11.9,43.9],
+  "Costa Rica":[9.7,-83.8],
+  "Côte d’Ivoire":[7.5,-5.5],
+  "Croatia":[45.1,15.2],
+  "Cuba":[21.5,-77.8],
+  "Cyprus":[35.1,33.4],
+  "Czechia":[49.8,15.5],
+  "Congo":[-0.7,15.8],
+  "Democratic Republic of the Congo":[-4,21.8],
+  "Denmark":[56.3,9.5],
+  "Djibouti":[11.8,42.6],
+  "Dominica":[15.4,-61.4],
+  "Dominican Republic":[18.7,-70.2]
+};
+
 const grid = document.getElementById("countryGrid");
 const search = document.getElementById("countrySearch");
 const count = document.getElementById("countryCount");
@@ -229,36 +351,114 @@ const noResults = document.getElementById("noResults");
 
 function renderCountries() {
   const term = search.value.trim().toLocaleLowerCase();
-  const filtered = countries.filter(([name]) => name.toLocaleLowerCase().includes(term));
+  const filtered = countries.filter(([name]) =>
+    name.toLocaleLowerCase().includes(term)
+  );
+
   grid.replaceChildren();
 
-  filtered.forEach(([name, url]) => {
+  filtered.forEach(([name,url]) => {
     const link = document.createElement("a");
     link.className = "country-card";
     link.href = url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
+
     const pin = document.createElement("span");
     pin.className = "pin";
-    pin.setAttribute("aria-hidden", "true");
+    pin.setAttribute("aria-hidden","true");
+
     const content = document.createElement("span");
     const title = document.createElement("span");
     title.className = "country-name";
     title.textContent = name;
+
     const note = document.createElement("div");
     note.className = "card-note";
     note.textContent = "Visit country community ↗";
-    content.append(title, note);
-    link.append(pin, content);
+
+    content.append(title,note);
+    link.append(pin,content);
     grid.append(link);
   });
 
-  count.textContent = `Showing ${filtered.length} of ${countries.length} country communities`;
+  count.textContent =
+    `Showing ${filtered.length} of ${countries.length} country communities`;
   noResults.style.display = filtered.length ? "none" : "block";
 }
-search.addEventListener("input", renderCountries);
-document.getElementById("footerYear").textContent = new Date().getFullYear();
+
+search.addEventListener("input",renderCountries);
+document.getElementById("footerYear").textContent =
+  new Date().getFullYear();
 renderCountries();
+
+function initializeGlobe() {
+  const container = document.getElementById("globe-container");
+
+  if (typeof Globe === "undefined") {
+    container.innerHTML =
+      '<p style="text-align:center;color:#ffd76a;padding:40px 15px">The 3D globe could not load. Please check your internet connection and refresh the page.</p>';
+    return;
+  }
+
+  const markerData = countries
+    .filter(([name]) => countryLocations[name])
+    .map(([name,url]) => ({
+      name,
+      url,
+      lat:countryLocations[name][0],
+      lng:countryLocations[name][1]
+    }));
+
+  const globe = Globe()(container)
+    .backgroundColor("rgba(0,0,0,0)")
+    .globeImageUrl(
+      "https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+    )
+    .bumpImageUrl(
+      "https://unpkg.com/three-globe/example/img/earth-topology.png"
+    )
+    .showAtmosphere(true)
+    .atmosphereColor("#65cfff")
+    .atmosphereAltitude(0.18)
+    .pointsData(markerData)
+    .pointLat("lat")
+    .pointLng("lng")
+    .pointColor(() => "#ffd76a")
+    .pointAltitude(0.015)
+    .pointRadius(0.45)
+    .pointLabel(point => `
+      <div style="color:#10213b;background:#fff4d1;padding:9px 12px;border-radius:8px;font-family:Arial,sans-serif">
+        <strong>${point.name}</strong><br>
+        <span>Click to visit Facebook community</span>
+      </div>
+    `)
+    .onPointClick(point => {
+      window.open(point.url,"_blank","noopener,noreferrer");
+    });
+
+  function resizeGlobe() {
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    globe.width(width);
+    globe.height(height);
+  }
+
+  resizeGlobe();
+
+  globe.pointOfView({lat:20,lng:10,altitude:2.3},0);
+  globe.controls().autoRotate = true;
+  globe.controls().autoRotateSpeed = 0.45;
+  globe.controls().enableZoom = true;
+
+  window.addEventListener("resize",resizeGlobe);
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded",initializeGlobe);
+} else {
+  initializeGlobe();
+}
 </script>
 </body>
 </html>
